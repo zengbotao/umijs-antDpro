@@ -3,7 +3,7 @@ import { Card, Col, Popover, Row, message } from 'antd';
 
 import type { FC } from 'react';
 import { useState } from 'react';
-import ProForm, {
+import ProForm, { //标准 Form，增加了 onFinish 中自动 loading 和 根据 request 自动获取默认值的功能
   ProFormDateRangePicker,
   ProFormSelect,
   ProFormText,
@@ -16,6 +16,7 @@ import { fakeSubmitForm } from './service';
 import styles from './style.less';
 
 interface TableFormDateType {
+  //提前定义好数据格式
   key: string;
   workId?: string;
   name?: string;
@@ -179,7 +180,7 @@ const AdvancedForm: FC<Record<string, any>> = () => {
           );
         },
       }}
-      initialValues={{ members: tableData }}
+      initialValues={{ members: tableData }} //注意name属性members
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -367,11 +368,14 @@ const AdvancedForm: FC<Record<string, any>> = () => {
           <ProForm.Item name="members">
             <EditableProTable<TableFormDateType>
               recordCreatorProps={{
-                record: () => {
-                  return {
-                    key: `0${Date.now()}`,
-                  };
-                },
+                newRecordType: 'dataSource',
+                position: 'top',
+                record: () => ({
+                  key: tableData.length + 1,
+                  workId: '0000' + tableData.length + 1,
+                  name: 'Jim Greend',
+                  department: 'London No. 1 Lake Park',
+                }),
               }}
               columns={columns}
               rowKey="key"
